@@ -1,0 +1,12 @@
+numpy>=1.20
+astropy>=5.0
+matplotlib>=3.3
+photutils>=1.5
+scipy>=1.7
+pyds9>=1.8.1
+
+[dev]
+jupyter>=1.0
+pytest>=6.0
+black>=22.0
+flake8>=4.0

@@ -1,0 +1,122 @@
+Metadata-Version: 2.4
+Name: roman-lolo
+Version: 0.1.0
+Summary: Roman WFI CRNL simulation and lamp-on/lamp-off analysis tools
+Author: Maxime Rizzo
+Author-email: Maxime Rizzo <m.rizzo@astro.example.com>
+License: MIT
+Project-URL: Homepage, https://github.com/example/roman-lolo
+Project-URL: Documentation, https://github.com/example/roman-lolo#readme
+Project-URL: Repository, https://github.com/example/roman-lolo.git
+Keywords: astronomy,roman,wfi,crnl,photometry
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Science/Research
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Requires-Python: >=3.9
+Description-Content-Type: text/markdown
+Requires-Dist: numpy>=1.20
+Requires-Dist: astropy>=5.0
+Requires-Dist: matplotlib>=3.3
+Requires-Dist: photutils>=1.5
+Requires-Dist: scipy>=1.7
+Requires-Dist: pyds9>=1.8.1
+Provides-Extra: dev
+Requires-Dist: jupyter>=1.0; extra == "dev"
+Requires-Dist: pytest>=6.0; extra == "dev"
+Requires-Dist: black>=22.0; extra == "dev"
+Requires-Dist: flake8>=4.0; extra == "dev"
+Dynamic: author
+Dynamic: requires-python
+
+# Roman LOLO - Lamp-On/Lamp-Off Simulation and Analysis
+
+Tools for simulating count-rate non-linearity (CRNL) in the Roman Space Telescope's Wide Field Instrument (WFI) using lamp-on/lamp-off observations.
+
+## Installation
+
+Clone the repository and install in editable mode:
+
+```bash
+pip install -e .
+```
+
+Or with development dependencies:
+
+```bash
+pip install -e ".[dev]"
+```
+
+## Features
+
+### CRNL Simulation (`roman_lolo.roman_crnl_sim`)
+
+- **RomanWFIParams**: Instrument parameters for Roman WFI
+- **CRNLModel**: Power-law count-rate non-linearity model
+- **SceneGenerator**: Generate synthetic astronomical scenes with stars and galaxies
+- **LampOnOffSimulator**: Simulate lamp-on/lamp-off observations with realistic noise
+- Visualization and FITS I/O utilities
+
+### Source Photometry (`roman_lolo.romanphot`)
+
+- **SourcePhotometry**: Source detection and aperture/PSF photometry
+- DS9 integration for interactive visualization
+- Noise estimation and signal-to-noise calculations
+
+## Quick Start
+
+```python
+from roman_lolo import (
+    RomanWFIParams,
+    CRNLModel,
+    SceneGenerator,
+    LampOnOffSimulator,
+)
+
+# Set up instrument and CRNL model
+wfi = RomanWFIParams()
+crnl = CRNLModel(alpha=1.005, s_cal=100.0)
+
+# Generate a scene with stars and galaxies
+scene_gen = SceneGenerator(wfi=wfi)
+scene = scene_gen.render_scene(n_stars=200, n_galaxies=50)
+
+# Simulate lamp-on/lamp-off observations
+simulator = LampOnOffSimulator(wfi=wfi, crnl=crnl)
+results = simulator.lamp_on_off_experiment(
+    scene=scene,
+    pedestal_rates=[50.0, 200.0, 500.0]
+)
+```
+
+## Project Structure
+
+```
+roman-lolo/
+├── src/
+│   └── roman_lolo/
+│       ├── __init__.py
+│       ├── roman_crnl_sim.py      # Main CRNL simulation code
+│       └── romanphot.py           # Photometry utilities
+├── notebooks/
+│   └── LOLO_clean.ipynb          # Example analysis notebook
+├── setup.py
+├── pyproject.toml
+└── README.md
+```
+
+## Documentation
+
+See example notebooks in `notebooks/` for detailed usage.
+
+## Author
+
+Maxime Rizzo
+
+## License
+
+MIT

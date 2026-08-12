@@ -5,7 +5,11 @@ from astropy.modeling import models, fitting
 from photutils.background import Background2D, MedianBackground, SExtractorBackground
 from photutils.detection import DAOStarFinder, IRAFStarFinder
 from photutils.aperture import CircularAperture, CircularAnnulus, aperture_photometry
-from photutils.psf import PSFPhotometry, IntegratedGaussianPRF, SourceGrouper
+from photutils.psf import PSFPhotometry, SourceGrouper
+try:
+    from photutils.psf import IntegratedGaussianPRF
+except ImportError:
+    from photutils.psf import GaussianPRF as IntegratedGaussianPRF
 from scipy.ndimage import shift as ndshift
 from scipy.interpolate import RectBivariateSpline
 import matplotlib.pyplot as plt

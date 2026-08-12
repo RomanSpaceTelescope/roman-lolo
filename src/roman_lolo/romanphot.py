@@ -1,24 +1,11 @@
 import numpy as np
 from astropy.io import fits
-from astropy.stats import sigma_clipped_stats, SigmaClip
-from astropy.modeling import models, fitting
-from photutils.background import Background2D, MedianBackground, SExtractorBackground
-from photutils.detection import DAOStarFinder, IRAFStarFinder
+from astropy.stats import sigma_clipped_stats
+from photutils.detection import DAOStarFinder
 from photutils.aperture import CircularAperture, CircularAnnulus, aperture_photometry
-from photutils.psf import PSFPhotometry, SourceGrouper
-try:
-    from photutils.psf import IntegratedGaussianPRF
-except ImportError:
-    from photutils.psf import GaussianPRF as IntegratedGaussianPRF
-from scipy.ndimage import shift as ndshift
-from scipy.interpolate import RectBivariateSpline
 import matplotlib.pyplot as plt
-from matplotlib.colors import LogNorm
-from dataclasses import dataclass, field
-import pyds9
-
+from dataclasses import dataclass
 import os
-os.environ['XPA_METHOD'] = 'local'  # this fixes a pyDS9 bug on my computer
 
 
 
@@ -201,6 +188,12 @@ class SourcePhotometry:
         if len(sources) == 0:
             return None
 
+        from photutils.psf import PSFPhotometry, SourceGrouper
+        try:
+            from photutils.psf import IntegratedGaussianPRF
+        except ImportError:
+            from photutils.psf import GaussianPRF as IntegratedGaussianPRF
+
         # Define the PSF model
         sigma_pix = self.fwhm_pix / 2.355
         psf_model = IntegratedGaussianPRF(sigma=sigma_pix)
@@ -220,7 +213,6 @@ class SourcePhotometry:
                      int(5 * self.fwhm_pix) | 1)
 
         # Create the fitter
-        from photutils.psf import PSFPhotometry, IterativePSFPhotometry
         from astropy.table import Table
 
         init_table = Table()
